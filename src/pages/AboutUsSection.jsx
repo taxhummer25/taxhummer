@@ -5,6 +5,7 @@ import NavBar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Mouse } from 'lucide-react';
 
+
 // Lazy Load Components
 const HeadingWithIllustration = lazy(() => import("../components/HeadingWithIllustration"));
 const WhyChooseUs = lazy(() => import("../components/WhyChooseUs"));
@@ -77,6 +78,7 @@ const AboutUsSection = () => {
           <WhyChooseUsUser />
           <MissionVision />
           <FounderSection />
+          
         </Suspense>
       </div>
       <Footer />
