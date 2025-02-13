@@ -99,7 +99,7 @@ const TaxCalculator = () => {
   const [taxResults, setTaxResults] = useState({
     totalIncome: 0,
     exemptAllowances: 0,
-    standardDeduction: 50000,
+    standardDeduction: 70000,
     chapterVIA: 0,
     taxableIncome: 0,
     taxPayable: 0,
@@ -111,52 +111,50 @@ const TaxCalculator = () => {
   const [selectedRegime, setSelectedRegime] = useState("new")
 
   const calculateTotalIncome = () => {
-    return Object.values(formData.incomeDetails).reduce((a, b) => a + (Number(b) || 0), 0)
-  }
+    return Object.values(formData.incomeDetails).reduce((a, b) => a + (Number(b) || 0), 0);
+};
 
-  const calculateDeductions = () => {
+const calculateDeductions = () => {
     if (selectedRegime === "new") {
-      return 0 // New regime has no deductions as per formula
+        return 50000; // Standard deduction added in the new regime as per the latest rules
     }
-    const chapterVIA = Object.values(formData.deductions).reduce((a, b) => a + (Number(b) || 0), 0)
-    return 50000 + chapterVIA // Standard deduction + other deductions in old regime
-  }
+    const chapterVIA = Object.values(formData.deductions).reduce((a, b) => a + (Number(b) || 0), 0);
+    return 50000 + chapterVIA; // Standard deduction + other deductions in old regime
+};
 
-  const calculateTax = (taxableIncome) => {
-    let tax = 0
+const calculateTax = (taxableIncome) => {
+    let tax = 0;
 
     if (selectedRegime === "new") {
-      // New regime tax slabs as per the formula
-      if (taxableIncome <= 250000) {
-        tax = 0
-      } else if (taxableIncome <= 500000) {
-        tax = (taxableIncome - 250000) * 0.05
-      } else if (taxableIncome <= 750000) {
-        tax = 12500 + (taxableIncome - 500000) * 0.1
-      } else if (taxableIncome <= 1000000) {
-        tax = 37500 + (taxableIncome - 750000) * 0.15
-      } else if (taxableIncome <= 1250000) {
-        tax = 75000 + (taxableIncome - 1000000) * 0.2
-      } else if (taxableIncome <= 1500000) {
-        tax = 125000 + (taxableIncome - 1250000) * 0.25
-      } else {
-        tax = 187500 + (taxableIncome - 1500000) * 0.3
-      }
+        // Updated new tax regime slabs
+        if (taxableIncome <= 300000) {
+            tax = 0;
+        } else if (taxableIncome <= 600000) {
+            tax = (taxableIncome - 300000) * 0.05;
+        } else if (taxableIncome <= 900000) {
+            tax = 15000 + (taxableIncome - 600000) * 0.1;
+        } else if (taxableIncome <= 1200000) {
+            tax = 45000 + (taxableIncome - 900000) * 0.15;
+        } else if (taxableIncome <= 1500000) {
+            tax = 90000 + (taxableIncome - 1200000) * 0.2;
+        } else {
+            tax = 150000 + (taxableIncome - 1500000) * 0.3;
+        }
     } else {
-      // Old regime tax slabs remain correct
-      if (taxableIncome <= 250000) {
-        tax = 0
-      } else if (taxableIncome <= 500000) {
-        tax = (taxableIncome - 250000) * 0.05
-      } else if (taxableIncome <= 1000000) {
-        tax = 12500 + (taxableIncome - 500000) * 0.2
-      } else {
-        tax = 112500 + (taxableIncome - 1000000) * 0.3
-      }
+        // Updated old regime slabs (no changes in slab rates)
+        if (taxableIncome <= 250000) {
+            tax = 0;
+        } else if (taxableIncome <= 500000) {
+            tax = (taxableIncome - 250000) * 0.05;
+        } else if (taxableIncome <= 1000000) {
+            tax = 12500 + (taxableIncome - 500000) * 0.2;
+        } else {
+            tax = 112500 + (taxableIncome - 1000000) * 0.3;
+        }
     }
 
-    return tax
-  }
+    return tax;
+};
 
   const handleCalculate = () => {
     const totalIncome = calculateTotalIncome()
@@ -185,10 +183,11 @@ const TaxCalculator = () => {
       ...prev,
       [category]: {
         ...prev[category],
-        [field]: Number(value),
+        [field]: value, // store as string
       },
     }))
   }
+  
 
   const tabs = ["Basic Details", "Income Details", "Deductions"]
 
@@ -246,32 +245,33 @@ const TaxCalculator = () => {
     switch (activeTab) {
       case 0:
         return (
-          <div className="space-y-4">
-            <label className="block">
-              <span className="text-gray-700">Financial Year</span>
-              <select
-                className="mt-1 block lg:h-10 w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring focus:ring-purple-200"
-                value={formData.financialYear}
-                onChange={(e) => setFormData((prev) => ({ ...prev, financialYear: e.target.value }))}
-              >
-                <option>FY 2025-2026</option>
-                <option>FY 2024-2025</option>
-              </select>
-            </label>
-
-            <label className="block">
-              <span className="text-gray-700">Age Group</span>
-              <select
-                className="mt-1 block  lg:h-10 w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring focus:ring-purple-200"
-                value={formData.ageGroup}
-                onChange={(e) => setFormData((prev) => ({ ...prev, ageGroup: e.target.value }))}
-              >
-                <option>0-60</option>
-                <option>60-80</option>
-                <option>80+</option>
-              </select>
-            </label>
-          </div>
+          <div className="space-y-6">
+          <label className="block">
+            <span className="text-lg font-semibold text-gray-800">Financial Year</span>
+            <select
+              className="mt-2 block w-full h-12 rounded-lg border border-gray-300 bg-white px-4 text-gray-700 shadow-sm focus:border-purple-600 focus:ring-2 focus:ring-purple-300 transition-all"
+              value={formData.financialYear}
+              onChange={(e) => setFormData((prev) => ({ ...prev, financialYear: e.target.value }))}
+            >
+              <option>FY 2025-2026</option>
+              <option>FY 2024-2025</option>
+            </select>
+          </label>
+        
+          <label className="block">
+            <span className="text-lg font-semibold text-gray-800">Age Group</span>
+            <select
+              className="mt-2 block w-full h-12 rounded-lg border border-gray-300 bg-white px-4 text-gray-700 shadow-sm focus:border-purple-600 focus:ring-2 focus:ring-purple-300 transition-all"
+              value={formData.ageGroup}
+              onChange={(e) => setFormData((prev) => ({ ...prev, ageGroup: e.target.value }))}
+            >
+              <option>0-60</option>
+              <option>60-80</option>
+              <option>80+</option>
+            </select>
+          </label>
+        </div>
+        
         )
       case 1:
         return (
@@ -314,7 +314,7 @@ const TaxCalculator = () => {
                   <input
                     type="number"
                     value={value || ""}
-                    onChange={(e) => handleInputChange("incomeDetails", key, e.target.value)}
+                    onChange={(e) => handleInputChange("deductions", key, e.target.value)}
                     placeholder="Enter amount"
                     className="pl-12 block w-full h-12 rounded-lg border border-gray-300 focus:border-purple-500 focus:ring focus:ring-purple-200"
                   />
@@ -344,7 +344,7 @@ const TaxCalculator = () => {
         <button
         className={`px-6 py-2 text-lg font-medium transition-colors duration-300 ease-in-out transform rounded-3xl ${
           selectedRegime === "new" 
-            ? "bg-purple-600 text-white border-b-2 border-purple-600"
+            ? "bg-purple-600 text-white border-b-1 border-purple-600"
             : "bg-gray-100 text-gray-600 hover:bg-gray-200"
         }`}
         onClick={() => setSelectedRegime("new")}
@@ -387,31 +387,32 @@ const TaxCalculator = () => {
 
         <div className="p-6">{renderTabContent()}</div>
 
-        <div className="flex justify-between p-6 border-t">
-          {activeTab > 0 && (
-            <button
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
-              onClick={() => setActiveTab((prev) => prev - 1)}
-            >
-              Back
-            </button>
-          )}
-          {activeTab < tabs.length - 1 ? (
-            <button
-              className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
-              onClick={() => setActiveTab((prev) => prev + 1)}
-            >
-              Continue
-            </button>
-          ) : (
-            <button
-              className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
-              onClick={handleCalculate}
-            >
-              Calculate
-            </button>
-          )}
-        </div>
+        <div className="flex flex-col sm:flex-row justify-between p-4 sm:p-6 border-t gap-2 sm:gap-0">
+  {activeTab > 0 && (
+    <button
+      className="w-full sm:w-auto px-6 sm:px-12 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+      onClick={() => setActiveTab((prev) => prev - 1)}
+    >
+      Back
+    </button>
+  )}
+  {activeTab < tabs.length - 1 ? (
+    <button
+      className="w-full sm:w-auto px-6 sm:px-12 py-2.5 bg-purple-500 text-white rounded-md hover:bg-purple-700 transition-colors"
+      onClick={() => setActiveTab((prev) => prev + 1)}
+    >
+      Continue
+    </button>
+  ) : (
+    <button
+      className="w-full sm:w-auto px-6 sm:px-14 py-2.5 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+      onClick={handleCalculate}
+    >
+      Calculate
+    </button>
+  )}
+</div>
+
       </div>
 
       {/* Results Dashboard */}
