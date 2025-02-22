@@ -4,14 +4,19 @@ import { MdOutlineDone } from 'react-icons/md';
 
 const plans = [
   {
-    title: 'Salary Individual',
+    title1: 'Salary Individual',
     price: '₹999',
-    features: ['Link your PAN', 'Upload Form 16', 'File ITR'],
+    features: [
+      'Link your PAN', 
+      'Upload Form 16', 
+      'File ITR',
+      'Easy to File'
+    ],
     icon: <FaUserTie className="text-purple-500 text-4xl" />,
     color: 'border-purple-500',
   },
   {
-    title: 'Salary Individual Pro',
+    title2: 'Salary Individual Pro',
     price: '₹1,439',
     features: [
       'Get Expert Assistance',
@@ -23,7 +28,7 @@ const plans = [
     color: 'border-pink-500',
   },
   {
-    title: 'Capital Gain Tax',
+    title3: 'Capital Gain Tax',
     price: '₹2,429',
     features: [
       'Capital from Stocks',
@@ -35,7 +40,7 @@ const plans = [
     color: 'border-green-500',
   },
   {
-    title: 'Foreign Tax',
+    title4: 'Foreign Tax',
     price: '₹3,419',
     features: [
       'Global Income',
@@ -67,7 +72,7 @@ const BusinessModel = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative my-20">
-      <h2 className="text-4xl md:text-5xl font-bold text-center text-purple-700 mb-10">
+      <h2 className="text-4xl md:text-5xl font-bold text-center text-gray-700 mb-10">
         💼 Our Plans
       </h2>
 
@@ -82,8 +87,30 @@ const BusinessModel = () => {
             className={`min-w-[280px] bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-transform transform hover:scale-105 border-t-4 ${plan.color}`}
           >
             <div className="flex justify-center mb-4">{plan.icon}</div>
-            <h3 className="text-2xl font-semibold text-gray-800 text-center">{plan.title}</h3>
-            <p className="text-3xl font-bold text-center text-purple-600 mt-2">{plan.price}</p>
+
+
+            <h3 className="text-2xl font-semibold text-center ">
+  {plan.title1}
+          </h3>
+            
+          <h3 className="text-2xl font-semibold text-center ">
+  {plan.title2}
+          </h3>
+
+          <h3 className="text-2xl font-semibold text-center ">
+  {plan.title3}
+          </h3>
+
+            <h3 className="text-2xl font-semibold text-center">
+  {plan.title4}
+          </h3>
+
+
+
+
+
+
+            <p className="text-2xl font-bold text-center text-gray-600 mt-2">{plan.price}</p>
             <p className="text-sm text-center text-gray-500 mb-4">One-Time Payment ✅</p>
 
             <ul className="space-y-2 text-gray-700">
@@ -94,7 +121,7 @@ const BusinessModel = () => {
               ))}
             </ul>
 
-            <button className="w-full mt-6 bg-purple-600 hover:bg-pink-500 text-white py-2 px-4 rounded-full font-semibold transition-all duration-300">
+            <button className="w-full mt-6 bg-purple-600 hover:bg-pink-500 text-white py-2 px-4  font-semibold transition-all duration-300">
               Choose Plan
             </button>
           </div>
